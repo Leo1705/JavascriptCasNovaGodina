@@ -8,20 +8,95 @@
 </head>
 <body>
   <script>
-    function isDateValid(dateStr) {
+    function isDateValid(dateStr) {  
   return !isNaN(new Date(dateStr));
 }
     var maticen = {
-      broj: "2902008214283",
+      broj: "2902008354513",
 
       proveriDuzina: function(){
-        if(this.broj.length == 13){
+        if(this.broj.length == 13){  
         return true;
         }
       },
+      imaBukva: function(){
+        var regExp = /[a-zA-Z]/g;
+if(regExp.test(this.broj)){
+return false;
+}
+      },
+
+      infoGrad : {
+        4:{
+            drzava:"Macedonia",
+            gradovi:{
+            41:"Bitola",
+        42:"Kumanovo",
+        43:"Ohrid",
+        44:"Prilep",
+        45:"Skopje",
+        46:"Strumica",
+        47:"Tetovo",
+        48:"Veles",
+        49:"Stip"
+            }
+        },
+        1:{
+            drzava:"Bosnia and Herzegovina",
+            gradovi:{
+        10:"Banja Luka",
+        11:"Bihac",
+        12:"Gorazde",
+        13:"Livno",
+        14:"Mostar",
+        15:"Prijedor",
+        16:"Sarajevo",
+        17:"Doboj",
+        18:"Tuzla",
+        19:"Zenica"
+            },
+         
+        },
+        2:{
+            drzava:"Montenegro",
+            gradovi:{
+        20:"not in use",
+        21:"Podgorica, Danilovgrad, Kolašin",
+        22:"Bar, Ulcinj",
+        23:"Budva, Kotor, Tivat",
+        24:"Herceg Novi",
+        25:" Cetinje",
+        26:"Nikšić, Plužine, Šavnik",
+        27:"Berane, Rožaje, Plav, Andrijevica",
+        28:"Bijelo Polje, Mojkovac",
+        29:"Pljevlja, Žabljak"
+            },
+         
+        },
+        3:{
+            drzava:"Croatia",
+            gradovi:{
+        30:"Osijek, Slavonia region ",
+        31:"Bjelovar, Virovitica, Koprivnica, Pakrac, Podravina region",
+        32:"Varaždin, Međimurje region",
+        33:" Zagreb",
+        34:"Karlovac, Kordun region",
+        35:"Gospić, Lika region",
+        36:"Rijeka, Pula, Gorski kotar, Istria and Croatian Littoral regions",
+        37:"Sisak, Banovina region",
+        38:"Split, Zadar, Šibenik, Dubrovnik, Dalmatia region",
+        39:"Hrvatsko Zagorje and mixed"
+            },
+         
+        },
+        
+       
+      } ,
+      
       datumValidnost: function(){
        
         var nizaBrojke = this.broj.slice(4,5);
+        
         var maticanZaTest = 0;
             if(nizaBrojke == 0){
               maticanZaTest  = 2;
@@ -42,17 +117,54 @@
        if(godina%4!= 0 && dnovi >= 29 && mesec ==2 ){
         return false;
        }
-
+       
        var ovojProveri= mesec+"/"+dnovi+"/"+godina;
+
   return isDateValid(ovojProveri);
    
       },
-      isValid: function(){
+      gradValidnost: function()
+{
+    var polValidnost1 = this.broj.slice(7,9);
+  if(polValidnost1 >= 41 && polValidnost1 <= 49){
+    return true;
+  }
+}   , 
+dadiGrad:function(){
+
+    return {
+        drzava: this.infoGrad[this.broj.slice(7,8)].drzava,
+        gradovi: this.infoGrad[this.broj.slice(7,8)].gradovi[this.broj.slice(7,9)]
+    }
+
+
+
+},
+polValidnost: function(){
+var polValidnost2 = this.broj.slice(9,12);
+if(polValidnost2 >= 450 && polValidnost2 <= 455){
+    return true;
+}
+}  ,
+
+isValid: function(){
+    // if(!this.imaBukva()){
+    //     return false;
+    // }
         if(!this.proveriDuzina()){
           return false;
         }
         if(!this.datumValidnost()){
           return false;
+        }
+        if(!this.gradValidnost()){ 
+        return false;
+        }
+        if(!this.polValidnost()){
+        return false;
+        }
+        if(this.dadiGrad()){
+        
         }
         return true;
       }
