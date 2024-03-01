@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maticen Validaciija</title>
+</head>
+<body>
+  <script>
+    function isDateValid(dateStr) {
+  return !isNaN(new Date(dateStr));
+}
+    var maticen = {
+      broj: "2902008214283",
+
+      proveriDuzina: function(){
+        if(this.broj.length == 13){
+        return true;
+        }
+      },
+      datumValidnost: function(){
+       
+        var nizaBrojke = this.broj.slice(4,5);
+        var maticanZaTest = 0;
+            if(nizaBrojke == 0){
+              maticanZaTest  = 2;
+            }
+           else if(nizaBrojke == 1){
+            maticanZaTest = 1;
+           }
+ 
+       var validacijaMatican = this.broj.slice(0,4);
+       var validacijaMatican2 = this.broj.slice(4,7);
+      var validacijaMatican3 = this.broj.slice(0,13);
+       var finalValidacija = validacijaMatican+maticanZaTest+validacijaMatican2;
+
+       var dnovi = finalValidacija.slice(0,2);
+       var mesec = finalValidacija.slice(2,4);
+       var godina = finalValidacija.slice(4,8);
+ 
+       if(godina%4!= 0 && dnovi >= 29 && mesec ==2 ){
+        return false;
+       }
+
+       var ovojProveri= mesec+"/"+dnovi+"/"+godina;
+  return isDateValid(ovojProveri);
+   
+      },
+      isValid: function(){
+        if(!this.proveriDuzina()){
+          return false;
+        }
+        if(!this.datumValidnost()){
+          return false;
+        }
+        return true;
+      }
+
+    }
+  </script>
+</body>
+</html>
