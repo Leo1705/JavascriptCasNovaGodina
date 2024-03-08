@@ -7,12 +7,19 @@
   <title>Maticen Validaciija</title>
 </head>
 <body>
+  <h1>Проверка на ЕМБГ(матичен број ) </h1>
+  <input type="number" class="maticanCovek" alt="proverka na maticen broj projekat" />
+  <butotn>
+    
+  </butotn>
   <script>
     function isDateValid(dateStr) {  
   return !isNaN(new Date(dateStr));
 }
+
+
     var maticen = {
-      broj: "2902008354513",
+      broj: "3012979420055",
 
       proveriDuzina: function(){
         if(this.broj.length == 13){  
@@ -113,7 +120,7 @@ return false;
        var dnovi = finalValidacija.slice(0,2);
        var mesec = finalValidacija.slice(2,4);
        var godina = finalValidacija.slice(4,8);
- 
+           var checkValidDatum;
        if(godina%4!= 0 && dnovi >= 29 && mesec ==2 ){
         return false;
        }
@@ -123,6 +130,67 @@ return false;
   return isDateValid(ovojProveri);
    
       },
+      dajDatum: function(){
+        
+        var nizaBrojke = this.broj.slice(4,5);
+        
+        var maticanZaTest = 0;
+            if(nizaBrojke == 0){
+              maticanZaTest  = 2;
+            }
+           else if(nizaBrojke == 1 || nizaBrojke == 9 || nizaBrojke == 8 || nizaBrojke == 7){
+            maticanZaTest = 1;
+           }
+ 
+       var validacijaMatican = this.broj.slice(0,4);
+       var validacijaMatican2 = this.broj.slice(4,7);
+      var validacijaMatican3 = this.broj.slice(0,13);
+       var finalValidacija = validacijaMatican+maticanZaTest+validacijaMatican2;
+
+       var dnovi = finalValidacija.slice(0,2);
+       var mesec = finalValidacija.slice(2,4);
+       var godina = finalValidacija.slice(4,8);
+           var checkValidDatum;
+       if(godina%4!= 0 && dnovi >= 29 && mesec ==2 ){
+        return false;
+       }
+       
+       var ovojProveri= dnovi+"/"+mesec+"/"+godina;
+       return ovojProveri;
+      },
+      dajDetali: function(){
+        return {
+          "datum": this.dajDatum(),
+          "lokacija" : this.dadiGrad(),
+          "pol":this.dajPol()
+        }
+      },
+      checksum : function() {
+        var strMaska = '765432765432';
+        var intSuma = 0;
+        var intI = 0;
+
+        for (intI = 0; intI <= 12; intI++) {
+            intSuma = intSuma + (this.broj.charAt(intI) * strMaska.charAt(intI))
+        }
+        var intOstatok = 11 - intSuma % 11
+        if (intOstatok >= 10) {
+            intOstatok = 0;
+        }
+    	return intOstatok;
+    },
+    dajPol: function(){
+      var polValidnost2 = this.broj.slice(9,12);
+
+if(polValidnost2 >= 000 && polValidnost2 < 500){
+    return "masko";
+}
+else{
+  return "zensko";
+}
+
+    },
+      
       gradValidnost: function()
 {
     var polValidnost1 = this.broj.slice(7,9);
@@ -142,7 +210,8 @@ dadiGrad:function(){
 },
 polValidnost: function(){
 var polValidnost2 = this.broj.slice(9,12);
-if(polValidnost2 >= 450 && polValidnost2 <= 455){
+
+if(polValidnost2 >= 000 && polValidnost2 <= 999){
     return true;
 }
 }  ,
@@ -154,6 +223,7 @@ isValid: function(){
         if(!this.proveriDuzina()){
           return false;
         }
+        
         if(!this.datumValidnost()){
           return false;
         }
@@ -163,8 +233,9 @@ isValid: function(){
         if(!this.polValidnost()){
         return false;
         }
-        if(this.dadiGrad()){
-        
+        var intKB = this.broj.charAt(this.broj.toString().length - 1);
+        if(this.checksum() != intKB){
+          return false;
         }
         return true;
       }
